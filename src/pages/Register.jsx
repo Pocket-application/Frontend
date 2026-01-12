@@ -1,7 +1,10 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { register } from '../api/auth.api'
 
 export default function Register() {
+  const navigate = useNavigate()
+
   const [form, setForm] = useState({
     nombre: '',
     apellido: '',
@@ -12,12 +15,13 @@ export default function Register() {
   })
 
   const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setError(null)
 
@@ -31,7 +35,26 @@ export default function Register() {
       return
     }
 
-    console.log(form)
+    const payload = {
+      nombre: form.nombre,
+      apellido: form.apellido,
+      correo: form.email,
+      telefono: form.telefono,
+      password: form.password
+    }
+
+    try {
+      setLoading(true)
+      await register(payload)
+      navigate('/login')
+    } catch (err) {
+      setError(
+        err.response?.data?.detail ||
+        'Error al crear la cuenta. Intenta nuevamente.'
+      )
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -109,9 +132,10 @@ export default function Register() {
 
           <button
             type="submit"
-            className="mt-4 w-full rounded-xl bg-emerald-500 py-3 font-semibold text-slate-950 hover:bg-emerald-400 transition"
+            disabled={loading}
+            className="mt-4 w-full rounded-xl bg-emerald-500 py-3 font-semibold text-slate-950 hover:bg-emerald-400 transition disabled:opacity-50"
           >
-            Crear cuenta
+            {loading ? 'Creando cuenta...' : 'Crear cuenta'}
           </button>
         </form>
 

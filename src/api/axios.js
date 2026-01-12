@@ -1,17 +1,25 @@
+// src/api/axios.js
 import axios from 'axios'
-import { getAccessToken, logout } from '../services/token.service'
+import {
+  getAccessToken,
+  getRefreshToken,
+  setTokens,
+  logout
+} from '../services/token.service'
+import { refreshToken as refreshTokenApi } from './auth.api'
+
+const API_URL = import.meta.env.VITE_API_URL
 
 const api = axios.create({
-  baseURL: 'http://72.61.0.102:8001',
+  baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json'
   }
 })
 
-/**
- * Interceptor REQUEST
- * Adjunta el access_token automáticamente
- */
+/* ===============================
+   REQUEST INTERCEPTOR
+================================ */
 api.interceptors.request.use(
   (config) => {
     const token = getAccessToken()
@@ -23,17 +31,71 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 )
 
-/**
- * Interceptor RESPONSE
- * Manejo global de errores (401, 403)
- */
+/* ===============================
+   RESPONSE INTERCEPTOR
+================================ */
+let isRefreshing = false
+let failedQueue = []
+
+const processQueue = (error, token = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) prom.reject(error)
+    else prom.resolve(token)
+  })
+  failedQueue = []
+}
+
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      logout()
-      window.location.href = '/'
+  async (error) => {
+    const originalRequest = error.config
+
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry
+    ) {
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({
+            resolve: (token) => {
+              originalRequest.headers.Authorization = `Bearer ${token}`
+              resolve(api(originalRequest))
+            },
+            reject
+          })
+        })
+      }
+
+      originalRequest._retry = true
+      isRefreshing = true
+
+      try {
+        const refresh_token = getRefreshToken()
+        if (!refresh_token) throw error
+
+        const data = await refreshTokenApi(refresh_token)
+
+        setTokens(data)
+
+        api.defaults.headers.Authorization =
+          `Bearer ${data.access_token}`
+
+        processQueue(null, data.access_token)
+
+        originalRequest.headers.Authorization =
+          `Bearer ${data.access_token}`
+
+        return api(originalRequest)
+      } catch (err) {
+        processQueue(err, null)
+        logout()
+        globalThis.location.href = '/'
+        return Promise.reject(err)
+      } finally {
+        isRefreshing = false
+      }
     }
+
     return Promise.reject(error)
   }
 )

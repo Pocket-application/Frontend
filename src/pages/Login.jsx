@@ -1,13 +1,68 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { login } from '../api/auth.api'
+import { setTokens } from '../services/token.service'
+import { useAuth } from '../hooks/useAuth'
 
 export default function Login() {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const navigate = useNavigate()
+  const { setUser } = useAuth()
 
-  const handleSubmit = (e) => {
+  const [form, setForm] = useState({
+    email: '',
+    password: ''
+  })
+
+  const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(false)
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value })
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log({ username, password })
+    setError(null)
+
+    if (!form.email || !form.password) {
+      setError('Todos los campos son obligatorios')
+      return
+    }
+
+    try {
+      setLoading(true)
+
+      const data = await login({
+        correo: form.email,   // ⚠ nombre correcto según el backend
+        password: form.password
+      })
+
+      // Guarda tokens
+      setTokens(data)
+
+      // Decodifica el token para actualizar el AuthContext
+      const payload = JSON.parse(atob(data.access_token.split('.')[1]))
+      setUser({ id: payload.sub, rol: payload.rol })
+
+      // Redirige al dashboard
+      navigate('/dashboard')
+
+    } catch (err) {
+      // Manejo seguro de errores de FastAPI
+      if (err.response?.data?.detail) {
+        if (Array.isArray(err.response.data.detail)) {
+          setError(err.response.data.detail.map(d => d.msg).join(', '))
+        } else if (typeof err.response.data.detail === 'string') {
+          setError(err.response.data.detail)
+        } else {
+          setError('Error desconocido')
+        }
+      } else {
+        setError('Credenciales inválidas')
+      }
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -21,30 +76,37 @@ export default function Login() {
           Iniciar sesión
         </h1>
 
-        <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+        {error && (
+          <p className="mt-4 text-sm text-red-400 break-words">{error}</p>
+        )}
+
+        <form onSubmit={handleSubmit} className="mt-8 space-y-4">
           <input
-            type="text"
-            placeholder="Usuario"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            name="email"
+            type="email"
+            placeholder="Correo electrónico"
+            value={form.email}
+            onChange={handleChange}
             required
-            className="w-full rounded-lg bg-slate-800 p-3 text-white outline-none focus:ring-2 focus:ring-emerald-500"
+            className="input"
           />
 
           <input
+            name="password"
             type="password"
             placeholder="Contraseña"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={form.password}
+            onChange={handleChange}
             required
-            className="w-full rounded-lg bg-slate-800 p-3 text-white outline-none focus:ring-2 focus:ring-emerald-500"
+            className="input"
           />
 
           <button
             type="submit"
-            className="w-full rounded-xl bg-emerald-500 py-3 font-semibold text-slate-950 hover:bg-emerald-400 transition"
+            disabled={loading}
+            className="mt-4 w-full rounded-xl bg-emerald-500 py-3 font-semibold text-slate-950 hover:bg-emerald-400 transition disabled:opacity-50"
           >
-            Entrar
+            {loading ? 'Ingresando...' : 'Ingresar'}
           </button>
         </form>
 
