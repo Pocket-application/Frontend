@@ -4,7 +4,7 @@ export default function Documentation() {
   return (
     <div className="mx-auto max-w-7xl px-6 py-16">
       {/* Header */}
-      <header className="mb-16">
+      <header className="mb-20">
         <Link
           to="/"
           className="text-sm text-emerald-400 hover:underline"
@@ -13,169 +13,120 @@ export default function Documentation() {
         </Link>
 
         <h1 className="mt-6 text-4xl font-bold text-white">
-          Documentación · Pocket App
+          Cómo Pocket Application te ayuda a manejar tus finanzas
         </h1>
-        <p className="mt-4 max-w-3xl text-slate-300">
-          API REST para la gestión de finanzas personales, diseñada con
-          arquitectura modular, seguridad JWT y cálculos de saldos optimizados
-          a nivel de base de datos.
+
+        <p className="mt-6 max-w-3xl text-lg text-slate-300">
+          Pocket Application es una plataforma diseñada para darte claridad, control y consciencia sobre tu dinero. No se trata solo de registrar gastos, sino de entender cómo te mueves financieramente y por qué.
         </p>
       </header>
 
-      {/* Sections */}
-      
-
-      <DocSection title="🔐 Autenticación">
+      <Section title="La idea detrás de la plataforma">
         <p>
-          La API utiliza autenticación basada en JWT con tokens de acceso y
-          refresco.
+          Muchas personas sienten que el dinero simplemente “se va”, sin tener claridad de en qué, cuándo o por qué. El problema no suele ser cuánto se gana, sino la falta de visibilidad.
         </p>
-
-        <h4 className="mt-4 font-semibold text-white">
-          Login
-        </h4>
-        <CodeBlock>
-{`POST /auth/login
-
-{
-  "email": "usuario@email.com",
-  "password": "********"
-}`}
-        </CodeBlock>
-      </DocSection>
-
-      <DocSection title="👤 Usuarios">
-        <Endpoint
-          method="POST"
-          path="/usuarios"
-          description="Registrar usuario"
-        />
-        <Endpoint
-          method="PUT"
-          path="/usuarios/nombre"
-          description="Actualizar nombre"
-        />
-        <Endpoint
-          method="PUT"
-          path="/usuarios/correo"
-          description="Actualizar correo"
-        />
-        <Endpoint
-          method="PUT"
-          path="/usuarios/telefono"
-          description="Actualizar teléfono"
-        />
-        <Endpoint
-          method="PUT"
-          path="/usuarios/password"
-          description="Actualizar contraseña"
-        />
-      </DocSection>
-
-      <DocSection title="🏦 Cuentas">
-        <Endpoint method="POST" path="/cuentas" description="Crear cuenta" />
-        <Endpoint method="GET" path="/cuentas" description="Listar cuentas" />
-        <Endpoint
-          method="PUT"
-          path="/cuentas/{cuenta_id}"
-          description="Actualizar cuenta"
-        />
-        <Endpoint
-          method="DELETE"
-          path="/cuentas/{cuenta_id}"
-          description="Eliminar cuenta"
-        />
-      </DocSection>
-
-      <DocSection title="📊 Flujos (Ingresos / Egresos)">
         <p>
-          Los movimientos representan ingresos y egresos reales.
+          Pocket Application nace para resolver eso: transformar tus movimientos financieros en información clara, ordenada y útil para tomar mejores decisiones.
         </p>
-        <ul className="mt-3 list-disc list-inside text-slate-300">
-          <li>Ingreso → tipo_egreso = NULL</li>
-          <li>Egreso → Fijo | Variable</li>
-          <li>Validaciones a nivel BD y backend</li>
+      </Section>
+
+      <Section title="Qué puedes hacer con Pocket Application">
+        <Feature
+          title="Centralizar tu dinero"
+          description="Registra todas tus cuentas en un solo lugar y observa tu situación financiera completa, no fragmentada."
+        />
+        <Feature
+          title="Entender tus hábitos financieros"
+          description="Identifica patrones de gasto, ingresos recurrentes y egresos que afectan tu estabilidad."
+        />
+        <Feature
+          title="Separar lo necesario de lo impulsivo"
+          description="Diferencia claramente entre gastos fijos y variables para tomar decisiones más conscientes."
+        />
+        <Feature
+          title="Mover dinero sin perder contexto"
+          description="Las transferencias entre cuentas no distorsionan tu realidad financiera, todo se refleja correctamente."
+        />
+        <Feature
+          title="Conocer tu saldo real"
+          description="Tus saldos se calculan a partir de movimientos reales, no estimaciones."
+        />
+      </Section>
+
+      <Section title="Control sin complicaciones">
+        <p>
+          Pocket Application está diseñada para que el control financiero no se
+          sienta como una carga. Las reglas, validaciones y cálculos se manejan
+          automáticamente para evitar errores y confusión.
+        </p>
+        <p>
+          Tú te concentras en decidir, la plataforma se encarga de mantener la
+          coherencia de los datos.
+        </p>
+      </Section>
+
+      <Section title="¿Para quién es esta plataforma?">
+        <ul className="list-disc list-inside space-y-2">
+          <li>Personas que quieren dejar de vivir al día</li>
+          <li>Usuarios que desean entender en qué se va su dinero</li>
+          <li>Quienes buscan disciplina financiera sin complejidad</li>
+          <li>Personas que quieren tomar decisiones basadas en datos reales</li>
         </ul>
+      </Section>
 
-        <Endpoint method="POST" path="/flujo" description="Crear movimiento" />
-        <Endpoint method="GET" path="/flujo" description="Listar movimientos" />
-      </DocSection>
-
-      <DocSection title="🔁 Transferencias">
+      <Section title="Qué puedes esperar con el tiempo">
         <p>
-          Una transferencia genera automáticamente:
+          Con el uso constante empezarás a notar patrones claros: gastos
+          innecesarios, fugas de dinero y oportunidades de ahorro.
         </p>
-        <ul className="mt-3 list-disc list-inside text-slate-300">
-          <li>🔴 Egreso (cuenta origen)</li>
-          <li>🟢 Ingreso (cuenta destino)</li>
-        </ul>
+        <p>
+          Pocket Application no promete soluciones mágicas. Promete claridad.
+          Y la claridad es el primer paso hacia una mejor salud financiera.
+        </p>
+      </Section>
 
-        <Endpoint
-          method="POST"
-          path="/transferencias"
-          description="Crear transferencia"
-        />
-        <Endpoint
-          method="GET"
-          path="/transferencias"
-          description="Listar transferencias"
-        />
-      </DocSection>
-
-      <DocSection title="💹 Saldos">
-        <Endpoint
-          method="GET"
-          path="/saldos/cuentas"
-          description="Saldo por cuenta"
-        />
-        <Endpoint
-          method="GET"
-          path="/saldos/rango"
-          description="Saldo por rango de fechas"
-        />
-        <Endpoint
-          method="POST"
-          path="/saldos/reajuste"
-          description="Reajuste de saldo"
-        />
-      </DocSection>
+      <section className="mt-24 rounded-2xl bg-slate-900 p-12 text-center border border-slate-800">
+        <h2 className="text-3xl font-bold text-white">
+          Tus finanzas, bajo control
+        </h2>
+        <p className="mt-4 text-slate-300 max-w-2xl mx-auto">
+          Entiende tu dinero hoy y construye tranquilidad financiera mañana.
+        </p>
+        <Link
+          to="/login"
+          className="mt-8 inline-block rounded-xl bg-emerald-500 px-8 py-4 font-semibold text-slate-950 hover:bg-emerald-400 transition"
+        >
+          Empezar ahora
+        </Link>
+      </section>
     </div>
   )
 }
 
 /* ---------- Componentes ---------- */
 
-function DocSection({ title, children }) {
+function Section({ title, children }) {
   return (
-    <section className="mb-14">
-      <h2 className="mb-4 text-2xl font-bold text-emerald-400">
+    <section className="mb-16 max-w-4xl">
+      <h2 className="mb-6 text-2xl font-bold text-emerald-400">
         {title}
       </h2>
-      <div className="space-y-4 text-slate-300">
+      <div className="space-y-4 text-slate-300 text-lg">
         {children}
       </div>
     </section>
   )
 }
 
-function Endpoint({ method, path, description }) {
+function Feature({ title, description }) {
   return (
-    <div className="flex items-center justify-between rounded-xl bg-slate-900 p-4 border border-slate-800">
-      <div>
-        <span className="mr-3 rounded-md bg-emerald-500 px-2 py-1 text-sm font-bold text-slate-950">
-          {method}
-        </span>
-        <code className="text-slate-200">{path}</code>
-      </div>
-      <span className="text-slate-400">{description}</span>
+    <div className="mb-4 rounded-2xl border border-slate-800 bg-slate-900 p-6">
+      <h3 className="text-xl font-semibold text-white">
+        {title}
+      </h3>
+      <p className="mt-2 text-slate-300">
+        {description}
+      </p>
     </div>
-  )
-}
-
-function CodeBlock({ children }) {
-  return (
-    <pre className="rounded-xl bg-slate-900 p-4 text-sm text-slate-200 overflow-x-auto border border-slate-800">
-      <code>{children}</code>
-    </pre>
   )
 }

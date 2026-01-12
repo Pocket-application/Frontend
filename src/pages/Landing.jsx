@@ -8,7 +8,7 @@ export default function Landing() {
         <div className="mx-auto max-w-7xl px-6 py-24">
           <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-white">
             Controla tu dinero,
-            <span className="block text-emerald-400">
+            <span className="block text-emerald-400"> 
               domina tus finanzas
             </span>
           </h1>
@@ -20,9 +20,9 @@ export default function Landing() {
           </p>
 
           <div className="mt-10 flex gap-4">
-            <button className="rounded-xl bg-emerald-500 px-6 py-3 text-slate-950 font-semibold hover:bg-emerald-400 transition">
+            <Link to="/login" className="rounded-xl bg-emerald-500 px-6 py-3 text-slate-950 font-semibold hover:bg-emerald-400 transition">
               Comenzar ahora
-            </button>
+            </Link>
             <Link to="/docs" className="rounded-xl border border-slate-700 px-6 py-3 font-semibold text-slate-200 hover:bg-slate-800 transition">
               Ver documentación
             </Link>
@@ -70,12 +70,12 @@ export default function Landing() {
           <h2 className="text-4xl font-bold">
             Empieza a tomar control hoy
           </h2>
-          <p className="mt-4 text-slate-300">
+          <p className="mt-4 text-slate-300 mb-10">
             Tus finanzas claras, organizadas y bajo tu control.
           </p>
-          <button className="mt-8 rounded-xl bg-emerald-500 px-8 py-4 text-slate-950 font-semibold hover:bg-emerald-400 transition">
+          <Link to="/register" className="mt-8 rounded-xl bg-emerald-500 px-8 py-4 text-slate-950 font-semibold hover:bg-emerald-400 transition">
             Crear cuenta gratis
-          </button>
+          </Link>
         </div>
       </section>
 
