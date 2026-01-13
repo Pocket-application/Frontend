@@ -13,23 +13,17 @@ export default function App() {
     <AuthProvider>
       <div className="min-h-screen bg-slate-950 text-slate-100">
         <Routes>
+          {/* Públicas */}
           <Route path="/" element={<Landing />} />
           <Route path="/docs" element={<Documentation />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-          {/* Rutas privadas */}
-          <Route path="/dashboard" element={
-            <PrivateRoute>
-              <Dashboard />
-            </PrivateRoute>
-          } />
-
-          <Route path="/flujos" element={
-            <PrivateRoute>
-              <Flujos />
-            </PrivateRoute>
-          } />
+          {/* Privadas */}
+          <Route element={<PrivateRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/flujos" element={<Flujos />} />
+          </Route>
         </Routes>
       </div>
     </AuthProvider>

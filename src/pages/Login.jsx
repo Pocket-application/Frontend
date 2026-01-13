@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { login } from '../api/auth.api'
 import { setTokens } from '../services/token.service'
-import { useAuth } from '../hooks/useAuth'
+import { useAuth } from '../context/AuthContext'
+import { getMe } from '../api/user.api'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -40,9 +41,15 @@ export default function Login() {
       // Guarda tokens
       setTokens(data)
 
+       // 2️⃣ Obtener usuario REAL
+      const me = await getMe();
+
+      // 3️⃣ Guardar usuario completo en contexto
+      setUser(me);
+
       // Decodifica el token para actualizar el AuthContext
-      const payload = JSON.parse(atob(data.access_token.split('.')[1]))
-      setUser({ id: payload.sub, rol: payload.rol })
+      // const payload = JSON.parse(atob(data.access_token.split('.')[1]))
+      // setUser({ id: payload.sub, rol: payload.rol })
 
       // Redirige al dashboard
       navigate('/dashboard')
