@@ -1,0 +1,55 @@
+import { Calendar, Search } from "lucide-react"
+
+export default function FlujosHeader({
+  categorias = [],
+  categoriaId,
+  setCategoriaId,
+  tipo,
+  setTipo,
+  onMonth,
+  onAdvanced
+}) {
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <h1 className="text-3xl font-bold">Movimientos</h1>
+
+        <div className="flex items-center gap-3">
+          <button onClick={onMonth} className="flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900 px-4 py-2 hover:bg-slate-800 transition">
+            <Calendar size={18} />
+            Mes
+          </button>
+          <button onClick={onAdvanced} className="text-sm text-slate-400">
+            <Search size={16} />
+            Búsqueda avanzada
+          </button>
+        </div>
+      </div>
+
+      <div className="flex gap-3 flex-wrap">
+        <select
+          value={categoriaId}
+          onChange={e => setCategoriaId(e.target.value)}
+          className="input max-w-xs"
+        >
+          <option value="">Todas las categorías</option>
+          {categorias.map(c => (
+            <option key={c.id} value={c.id}>
+              {c.nombre}
+            </option>
+          ))}
+        </select>
+
+        <select
+          value={tipo}
+          onChange={e => setTipo(e.target.value)}
+          className="input max-w-xs"
+        >
+          <option value="">Todos</option>
+          <option value="Ingreso">Ingresos</option>
+          <option value="Egreso">Egresos</option>
+        </select>
+      </div>
+    </div>
+  )
+}
