@@ -7,7 +7,7 @@ import { getCategorias } from "../../api/categorias.api"
 // 👉 helper para fecha actual en formato YYYY-MM-DD
 const todayISO = () => new Date().toISOString().split("T")[0]
 
-export default function CreateMovimientoModal({ open, onClose, onSuccess  }) {
+export default function CreateMovimientoModal({ open, onClose, onSuccess }) {
   const [step, setStep] = useState(1)
   const [tipo, setTipo] = useState(null)
   const [cuentas, setCuentas] = useState([])
@@ -19,7 +19,7 @@ export default function CreateMovimientoModal({ open, onClose, onSuccess  }) {
     monto: "",
     cuenta_id: "",
     categoria_id: "",
-    estado: "Pendiente",
+    estado: "Confirmado",
     tipo_egreso: ""
   })
 
@@ -29,7 +29,6 @@ export default function CreateMovimientoModal({ open, onClose, onSuccess  }) {
   useEffect(() => {
     if (!open) return
 
-    // reset completo del modal
     setStep(1)
     setTipo(null)
     setForm({
@@ -38,7 +37,7 @@ export default function CreateMovimientoModal({ open, onClose, onSuccess  }) {
       monto: "",
       cuenta_id: "",
       categoria_id: "",
-      estado: "Pendiente",
+      estado: "Confirmado",
       tipo_egreso: ""
     })
 
@@ -51,8 +50,13 @@ export default function CreateMovimientoModal({ open, onClose, onSuccess  }) {
   ========================= */
   const submit = async () => {
     await createFlujo({
-      ...form,
-      tipo_movimiento: tipo,
+      fecha: form.fecha,
+      descripcion: form.descripcion,
+      monto: Number(form.monto),
+      cuenta_id: Number(form.cuenta_id),
+      categoria_id: Number(form.categoria_id),
+      estado: form.estado,                // Confirmado | Pendiente
+      tipo_movimiento: tipo,              // Ingreso | Egreso
       tipo_egreso: tipo === "Egreso" ? form.tipo_egreso : null
     })
 
@@ -67,7 +71,7 @@ export default function CreateMovimientoModal({ open, onClose, onSuccess  }) {
       ========================= */}
       {step === 1 && (
         <>
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-slate-400 mb-3">
             ¿Qué tipo de movimiento deseas crear?
           </p>
 
@@ -76,7 +80,7 @@ export default function CreateMovimientoModal({ open, onClose, onSuccess  }) {
               setTipo("Ingreso")
               setStep(2)
             }}
-            className="btn-primary w-full"
+            className="btn-primary w-full mb-2"
           >
             Ingreso
           </button>
@@ -86,7 +90,9 @@ export default function CreateMovimientoModal({ open, onClose, onSuccess  }) {
               setTipo("Egreso")
               setStep(2)
             }}
-            className="btn-secondary w-full"
+            className="w-full py-2 rounded-md font-medium
+                       bg-red-600 text-white
+                       hover:bg-red-700 transition"
           >
             Egreso
           </button>
@@ -167,8 +173,8 @@ export default function CreateMovimientoModal({ open, onClose, onSuccess  }) {
             value={form.estado}
             onChange={e => setForm({ ...form, estado: e.target.value })}
           >
+            <option value="Confirmado">Confirmado</option>
             <option value="Pendiente">Pendiente</option>
-            <option value="Confirmada">Confirmada</option>
           </select>
 
           <button onClick={submit} className="btn-primary w-full">

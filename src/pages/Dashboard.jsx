@@ -5,7 +5,7 @@ import { useGreeting } from "../hooks/useGreeting"
 import { getSaldosPorCuenta } from "../api/saldos.api"
 import { getFlujos } from "../api/flujo.api"
 import { getCategorias } from "../api/categorias.api"
-import { getCached, setCached } from "../hooks/useDashboardCache"
+import { getCached, setCached, clearCached } from "../hooks/useDashboardCache"
 
 import DashboardHeader from "../components/dashboard/DashboardHeader"
 import BalanceDropdown from "../components/dashboard/BalanceDropdown"
@@ -132,7 +132,7 @@ export default function Dashboard() {
     setEgresos(egr)
 
     setCached("dashboard", {
-      saldos,
+      saldos: saldos,
       ingresos: ing,
       egresos: egr
     })
@@ -143,6 +143,7 @@ export default function Dashboard() {
   ========================= */
 
   const reloadDashboard = async () => {
+    clearCached("dashboard")
     setLoading(true)
 
     const [s, f, c] = await Promise.all([
@@ -206,7 +207,7 @@ export default function Dashboard() {
       />
 
       {/* 🔥 FAB MENU */}
-      <FabMenu />
+      <FabMenu onSuccess={reloadDashboard} />
     </div>
   )
 }

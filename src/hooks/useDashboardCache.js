@@ -17,3 +17,7 @@ export function setCached(key, data, ttl = 300000) {
     })
   )
 }
+
+export function clearCached(key) {
+  localStorage.removeItem(key)
+}
