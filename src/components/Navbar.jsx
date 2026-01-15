@@ -20,9 +20,12 @@ export default function Navbar() {
 
           {/* Desktop */}
           <div className="hidden md:flex items-center gap-6">
+            <Link to="/dashboard" className="nav-link">Dashboard</Link>
             <Link to="/flujos" className="nav-link">Flujos</Link>
             <Link to="/transferencias" className="nav-link">Transferencias</Link>
             <Link to="/categorias" className="nav-link">Categorías</Link>
+            <Link to="/cuentas" className="nav-link">Cuentas</Link>
+            <Link to="/reportes" className="nav-link">Reportes</Link>
 
             {/* USER MENU */}
             <div
