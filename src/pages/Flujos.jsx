@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
-import { getFlujos } from "../api/flujos.api";
+import { getFlujos } from "../api/flujo.api";
 
 export default function Flujos() {
   const [flujos, setFlujos] = useState([]);

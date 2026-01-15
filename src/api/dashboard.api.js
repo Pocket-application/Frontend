@@ -1,13 +1,11 @@
-import api from './axios'
-
-
-export const getCuentas = async () => {
-const { data } = await api.get('/cuentas/')
-return data
-}
-
+import api from "./axios"
 
 export const getSaldosPorCuenta = async () => {
-const { data } = await api.get('/saldos/cuentas')
-return data
+  const { data } = await api.get("/saldos/cuentas")
+  return data
+}
+
+export const getFlujos = async (params = {}) => {
+  const { data } = await api.get("/flujo/", { params })
+  return data
 }
