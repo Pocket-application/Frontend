@@ -9,8 +9,9 @@ import { AuthProvider } from './context/AuthContext'
 import PrivateRoute from './routes/PrivateRoute'
 import Profile from './pages/Profile'
 import Transferencias from './pages/Transferencias'
-import Categorias from './pages/categorias'
+import Categorias from './pages/Categorias'
 import Cuentas from './pages/Cuentas'
+import Reportes from './pages/Reportes'
 
 export default function App() {
   return (
@@ -31,6 +32,7 @@ export default function App() {
             <Route path="/transferencias" element={<Transferencias />} />
             <Route path="/categorias" element={<Categorias />} />
             <Route path="/cuentas/*" element={<Cuentas />} />
+            <Route path="/reportes" element={<Reportes />} />
           </Route>
         </Routes>
       </div>
