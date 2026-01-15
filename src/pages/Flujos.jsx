@@ -12,6 +12,7 @@ import MonthPickerModal from "../components/flujos/MonthPickerModal"
 import AdvancedSearchModal from "../components/flujos/AdvancedSearchModal"
 import DeleteFlujoModal from "../components/flujos/DeleteFlujoModal"
 import EditFlujoModal from "../components/flujos/EditFlujoModal"
+import PeriodTotals from "../components/flujos/PeriodTotals"
 
 export default function Flujos() {
   const [flujos, setFlujos] = useState([])
@@ -33,7 +34,7 @@ export default function Flujos() {
   const [editFlujo, setEditFlujo] = useState(null)
   const [deleteId, setDeleteId] = useState(null)
 
-  // filtros nuevos
+  // filtros
   const [categoriaId, setCategoriaId] = useState("")
   const [tipo, setTipo] = useState("")
 
@@ -82,6 +83,19 @@ export default function Flujos() {
     tipo
   ])
 
+  // 👉 TOTALES DEL PERÍODO FILTRADO
+  const totals = useMemo(() => {
+    let ingresos = 0
+    let egresos = 0
+
+    filtered.forEach(f => {
+      if (f.tipo_movimiento === "Ingreso") ingresos += f.monto
+      if (f.tipo_movimiento === "Egreso") egresos += f.monto
+    })
+
+    return { ingresos, egresos }
+  }, [filtered])
+
   const paginated = useMemo(() => {
     const start = (page - 1) * pageSize
     return filtered.slice(start, start + pageSize)
@@ -105,6 +119,12 @@ export default function Flujos() {
           setTipo={setTipo}
           onMonth={() => setOpenMonth(true)}
           onAdvanced={() => setOpenAdvanced(true)}
+        />
+
+        {/* 👇 RESUMEN FINANCIERO DEL PERÍODO */}
+        <PeriodTotals
+          ingresos={totals.ingresos}
+          egresos={totals.egresos}
         />
 
         <FlujosTable
