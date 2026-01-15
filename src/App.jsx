@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard'
 import Flujos from './pages/Flujos'
 import { AuthProvider } from './context/AuthContext'
 import PrivateRoute from './routes/PrivateRoute'
+import Profile from './pages/Profile'
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
           <Route element={<PrivateRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/flujos" element={<Flujos />} />
+            <Route path="/perfil/*" element={<Profile />} />
           </Route>
         </Routes>
       </div>
