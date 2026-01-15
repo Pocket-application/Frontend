@@ -10,6 +10,7 @@ import PrivateRoute from './routes/PrivateRoute'
 import Profile from './pages/Profile'
 import Transferencias from './pages/Transferencias'
 import Categorias from './pages/categorias'
+import Cuentas from './pages/Cuentas'
 
 export default function App() {
   return (
@@ -29,6 +30,7 @@ export default function App() {
             <Route path="/perfil/*" element={<Profile />} />
             <Route path="/transferencias" element={<Transferencias />} />
             <Route path="/categorias" element={<Categorias />} />
+            <Route path="/cuentas/*" element={<Cuentas />} />
           </Route>
         </Routes>
       </div>
