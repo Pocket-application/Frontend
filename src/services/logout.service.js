@@ -7,6 +7,6 @@ export async function handleLogout() {
     if (refresh) await logoutApi(refresh);
   } finally {
     logout();
-    globalThis.location.href = "/";
+    globalThis.location.href = "/pocket";
   }
 }
