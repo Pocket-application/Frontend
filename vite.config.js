@@ -6,4 +6,10 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   base: '/',
+  server: {
+    allowedHosts: [
+      'oscarpalomino.dev',
+      'www.oscarpalomino.dev'
+    ]
+  }
 })
