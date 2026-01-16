@@ -11,9 +11,19 @@ export default function ReajusteSaldoModal({
   const submit = async e => {
     e.preventDefault()
 
+    // Normalizar coma → punto
+    const saldoNumerico = Number(
+      saldoReal.replace(/\./g, "").replace(",", ".")
+    )
+
+    if (isNaN(saldoNumerico)) {
+      alert("Ingrese un valor válido")
+      return
+    }
+
     await reajustarSaldo({
       cuenta_id: cuenta.id,
-      saldo_real: Number(saldoReal),
+      saldo_real: saldoNumerico,
       descripcion: "Reajuste de saldo"
     })
 
@@ -45,9 +55,10 @@ export default function ReajusteSaldoModal({
         </div>
 
         <input
-          type="number"
+          type="text"
+          inputMode="decimal"
           className="input w-full"
-          placeholder="Saldo real"
+          placeholder="Saldo real (ej: 150000.50)"
           value={saldoReal}
           onChange={e => setSaldoReal(e.target.value)}
           required
