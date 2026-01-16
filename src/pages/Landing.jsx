@@ -8,9 +8,7 @@ export default function Landing() {
         <div className="mx-auto max-w-7xl px-6 py-24">
           <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-white">
             Controla tu dinero,
-            <span className="block text-emerald-400"> 
-              domina tus finanzas
-            </span>
+            <span className="block text-emerald-400">domina tus finanzas</span>
           </h1>
 
           <p className="mt-6 max-w-2xl text-lg text-slate-300">

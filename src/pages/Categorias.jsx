@@ -23,6 +23,7 @@ export default function Categorias() {
   }
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadCategorias()
   }, [])
 
