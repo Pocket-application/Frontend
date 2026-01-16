@@ -113,6 +113,12 @@ export default function Navbar() {
             <Link to="/perfil" onClick={closeMobileMenu} className="nav-link">
               Perfil
             </Link>
+            <Link to="/cuentas" onClick={closeMobileMenu} className="nav-link">
+              Cuentas
+            </Link>
+            <Link to="/reportes" onClick={closeMobileMenu} className="nav-link">
+              Reportes
+            </Link>
 
             <button
               onClick={() => {
