@@ -16,6 +16,8 @@ export default function Register() {
 
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value })
@@ -110,25 +112,98 @@ export default function Register() {
             className="input"
           />
 
-          <input
-            name="password"
-            type="password"
-            placeholder="Contraseña"
-            value={form.password}
-            onChange={handleChange}
-            required
-            className="input"
-          />
+          <div className="relative">
+            <input
+              name="password"
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Contraseña"
+              value={form.password}
+              onChange={handleChange}
+              required
+              className="input pr-12"
+            />
 
-          <input
-            name="confirmPassword"
-            type="password"
-            placeholder="Confirmar contraseña"
-            value={form.confirmPassword}
-            onChange={handleChange}
-            required
-            className="input"
-          />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+              aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+            >
+              {showPassword ? (
+                // 👁️ abierto
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none"
+                  viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5
+                      c4.478 0 8.268 2.943 9.542 7
+                      -1.274 4.057-5.064 7-9.542 7
+                      -4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              ) : (
+                // 👁️ cerrado
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none"
+                  viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M3 3l18 18" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M10.584 10.587a3 3 0 004.243 4.243" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M6.223 6.223A9.956 9.956 0 0112 5
+                      c4.478 0 8.268 2.943 9.543 7
+                      a9.964 9.964 0 01-4.132 5.411" />
+                </svg>
+              )}
+            </button>
+          </div>
+
+          <div className="relative">
+            <input
+              name="confirmPassword"
+              type={showConfirmPassword ? 'text' : 'password'}
+              placeholder="Confirmar contraseña"
+              value={form.confirmPassword}
+              onChange={handleChange}
+              required
+              className="input pr-12"
+            />
+
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+              aria-label={showConfirmPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+            >
+              {showConfirmPassword ? (
+                // 👁️ abierto
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none"
+                  viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5
+                      c4.478 0 8.268 2.943 9.542 7
+                      -1.274 4.057-5.064 7-9.542 7
+                      -4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              ) : (
+                // 👁️ cerrado
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none"
+                  viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M3 3l18 18" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M10.584 10.587a3 3 0 004.243 4.243" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M6.223 6.223A9.956 9.956 0 0112 5
+                      c4.478 0 8.268 2.943 9.543 7
+                      a9.964 9.964 0 01-4.132 5.411" />
+                </svg>
+              )}
+            </button>
+          </div>
+
 
           <button
             type="submit"
