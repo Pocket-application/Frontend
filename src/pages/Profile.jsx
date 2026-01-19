@@ -20,42 +20,67 @@ export default function Profile() {
   };
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadUser();
   }, []);
 
   if (!user) return <p className="p-6">Cargando...</p>;
 
   return (
-      <div className="min-h-screen bg-slate-950 text-slate-200">
-        <Navbar user={{ nombre: 'Usuario' }} />
-        <main className="max-w-2xl mx-auto p-6 space-y-6">
-            <h1 className="text-2xl font-bold text-emerald-400">Mi perfil</h1>
+    <div className="min-h-screen bg-slate-950 text-slate-200">
+      <Navbar user={{ nombre: 'Usuario' }} />
 
-            <ProfileRow
-                label="Nombre completo"
-                value={`${user.nombre} ${user.apellido}`}
-                onEdit={() => setModalNombre(true)}
-            />
+      <main className="max-w-2xl mx-auto p-6 space-y-6">
+        <h1 className="text-2xl font-bold text-emerald-400">
+          Mi perfil
+        </h1>
 
-            <ProfileRow
-                label="Correo electrónico"
-                value={user.correo}
-                onEdit={() => setModalCorreo(true)}
-            />
+        {/* CTA APP ANDROID — SOLO MÓVIL */}
+        <div className="block sm:hidden">
+          <a
+            href="/pocket-app.apk"
+            download
+            className="
+              flex items-center justify-center gap-2
+              w-full rounded-xl
+              bg-emerald-500
+              py-3 font-semibold
+              text-slate-950
+              hover:bg-emerald-400
+              transition
+            "
+          >
+            📱 Descargar app (Android)
+          </a>
 
-            <ProfileRow
-                label="Teléfono"
-                value={user.telefono || "No registrado"}
-                onEdit={() => setModalTelefono(true)}
-            />
+          <p className="mt-2 text-center text-xs text-slate-400">
+            Instalación manual · APK
+          </p>
+        </div>
 
-            <ProfileRow
-                label="Contraseña"
-                value="••••••••"
-                onEdit={() => setModalPassword(true)}
-            />
-        </main>
+        <ProfileRow
+          label="Nombre completo"
+          value={`${user.nombre} ${user.apellido}`}
+          onEdit={() => setModalNombre(true)}
+        />
+
+        <ProfileRow
+          label="Correo electrónico"
+          value={user.correo}
+          onEdit={() => setModalCorreo(true)}
+        />
+
+        <ProfileRow
+          label="Teléfono"
+          value={user.telefono || "No registrado"}
+          onEdit={() => setModalTelefono(true)}
+        />
+
+        <ProfileRow
+          label="Contraseña"
+          value="••••••••"
+          onEdit={() => setModalPassword(true)}
+        />
+      </main>
 
       {/* MODALS */}
       {modalNombre && (

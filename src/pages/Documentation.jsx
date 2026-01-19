@@ -23,7 +23,7 @@ export default function Documentation() {
 
       <Section title="La idea detrás de la plataforma">
         <p>
-          Muchas personas sienten que el dinero simplemente “se va”, sin tener claridad de en qué, cuándo o por qué. El problema no suele ser cuánto se gana, sino la falta de visibilidad.
+          Muchas personas sienten que el dinero simplemente “se va”, sin tener claridad de en qué, cuándo o por qué.
         </p>
         <p>
           Pocket Application nace para resolver eso: transformar tus movimientos financieros en información clara, ordenada y útil para tomar mejores decisiones.
@@ -33,35 +33,32 @@ export default function Documentation() {
       <Section title="Qué puedes hacer con Pocket Application">
         <Feature
           title="Centralizar tu dinero"
-          description="Registra todas tus cuentas en un solo lugar y observa tu situación financiera completa, no fragmentada."
+          description="Registra todas tus cuentas en un solo lugar y observa tu situación financiera completa."
         />
         <Feature
           title="Entender tus hábitos financieros"
-          description="Identifica patrones de gasto, ingresos recurrentes y egresos que afectan tu estabilidad."
+          description="Identifica patrones de gasto, ingresos recurrentes y egresos."
         />
         <Feature
           title="Separar lo necesario de lo impulsivo"
-          description="Diferencia claramente entre gastos fijos y variables para tomar decisiones más conscientes."
+          description="Diferencia claramente entre gastos fijos y variables."
         />
         <Feature
           title="Mover dinero sin perder contexto"
-          description="Las transferencias entre cuentas no distorsionan tu realidad financiera, todo se refleja correctamente."
+          description="Las transferencias entre cuentas no distorsionan tu realidad financiera."
         />
         <Feature
           title="Conocer tu saldo real"
-          description="Tus saldos se calculan a partir de movimientos reales, no estimaciones."
+          description="Tus saldos se calculan a partir de movimientos reales."
         />
       </Section>
 
       <Section title="Control sin complicaciones">
         <p>
-          Pocket Application está diseñada para que el control financiero no se
-          sienta como una carga. Las reglas, validaciones y cálculos se manejan
-          automáticamente para evitar errores y confusión.
+          Pocket Application está diseñada para que el control financiero no se sienta como una carga.
         </p>
         <p>
-          Tú te concentras en decidir, la plataforma se encarga de mantener la
-          coherencia de los datos.
+          Tú te concentras en decidir, la plataforma se encarga de mantener la coherencia de los datos.
         </p>
       </Section>
 
@@ -76,28 +73,45 @@ export default function Documentation() {
 
       <Section title="Qué puedes esperar con el tiempo">
         <p>
-          Con el uso constante empezarás a notar patrones claros: gastos
-          innecesarios, fugas de dinero y oportunidades de ahorro.
+          Con el uso constante empezarás a notar patrones claros y oportunidades de ahorro.
         </p>
         <p>
           Pocket Application no promete soluciones mágicas. Promete claridad.
-          Y la claridad es el primer paso hacia una mejor salud financiera.
         </p>
       </Section>
 
+      {/* CTA FINAL */}
       <section className="mt-24 rounded-2xl bg-slate-900 p-12 text-center border border-slate-800">
         <h2 className="text-3xl font-bold text-white">
           Tus finanzas, bajo control
         </h2>
+
         <p className="mt-4 text-slate-300 max-w-2xl mx-auto">
           Entiende tu dinero hoy y construye tranquilidad financiera mañana.
         </p>
-        <Link
-          to="/login"
-          className="mt-8 inline-block rounded-xl bg-emerald-500 px-8 py-4 font-semibold text-slate-950 hover:bg-emerald-400 transition"
-        >
-          Empezar ahora
-        </Link>
+
+        <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+          {/* Web */}
+          <Link
+            to="/login"
+            className="rounded-xl bg-emerald-500 px-8 py-4 font-semibold text-slate-950 hover:bg-emerald-400 transition"
+          >
+            Empezar ahora
+          </Link>
+
+          {/* Android APK */}
+          <a
+            href="/pocket-app.apk"
+            download
+            className="rounded-xl border border-emerald-400 px-8 py-4 font-semibold text-emerald-400 hover:bg-emerald-400 hover:text-slate-950 transition"
+          >
+            Descargar app (Android)
+          </a>
+        </div>
+
+        <p className="mt-4 text-sm text-slate-400">
+          Requiere Android · Instalación manual (APK)
+        </p>
       </section>
     </div>
   )
