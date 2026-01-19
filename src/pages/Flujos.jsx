@@ -106,6 +106,16 @@ export default function Flujos() {
     setFlujos(data)
   }
 
+  const handleDelete = async () => {
+    try {
+      await deleteFlujo(deleteId)
+      await reload()
+      setDeleteId(null)
+    } catch (err) {
+      console.error("Error eliminando flujo:", err)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-slate-950">
       <Navbar />
@@ -174,12 +184,9 @@ export default function Flujos() {
       <DeleteFlujoModal
         id={deleteId}
         onClose={() => setDeleteId(null)}
-        onConfirm={async () => {
-          await deleteFlujo(deleteId)
-          setDeleteId(null)
-          reload()
-        }}
+        onConfirm={handleDelete}
       />
+
     </div>
   )
 }

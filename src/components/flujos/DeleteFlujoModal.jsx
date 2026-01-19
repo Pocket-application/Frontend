@@ -1,10 +1,8 @@
 import Modal from "../ui/Modal"
 
 export default function DeleteFlujoModal({ id, onClose, onConfirm }) {
-  if (!id) return null
-
   return (
-    <Modal open={!!id} onClose={onClose} title="Eliminar movimiento">
+    <Modal open={id !== null} onClose={onClose} title="Eliminar movimiento">
       <p className="text-slate-400">
         ¿Estás seguro de que deseas eliminar este movimiento?
         Esta acción no se puede deshacer.
