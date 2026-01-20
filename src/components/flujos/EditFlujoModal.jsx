@@ -7,6 +7,7 @@ import { updateFlujo } from "../../api/flujo.api"
 ========================= */
 function parseDecimalInput(value) {
   if (!value) return NaN
+
   value = value.replace(/\s/g, "")
 
   const hasComma = value.includes(",")
@@ -33,12 +34,20 @@ export default function EditFlujoModal({
   onSuccess
 }) {
   const [form, setForm] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (flujo) {
       setForm({
-        ...flujo,
-        monto: String(flujo.monto)
+        id: flujo.id,
+        fecha: flujo.fecha,
+        descripcion: flujo.descripcion,
+        monto: String(flujo.monto),
+        cuenta_id: flujo.cuenta_id,
+        categoria_id: flujo.categoria_id,
+        estado: flujo.estado,
+        tipo_movimiento: flujo.tipo_movimiento,
+        tipo_egreso: flujo.tipo_egreso ?? ""
       })
     }
   }, [flujo])
@@ -53,21 +62,51 @@ export default function EditFlujoModal({
       return
     }
 
-    await updateFlujo(form.id, {
-      descripcion: form.descripcion,
-      monto: montoNumerico,
-      cuenta_id: Number(form.cuenta_id),
-      categoria_id: Number(form.categoria_id)
-    })
+    if (
+      form.tipo_movimiento === "Egreso" &&
+      !form.categoria_id
+    ) {
+      alert("Debe seleccionar una categoría para egresos")
+      return
+    }
 
-    onSuccess()
-    onClose()
+    try {
+      setLoading(true)
+
+      await updateFlujo(form.id, {
+        fecha: form.fecha,
+        descripcion: form.descripcion,
+        monto: montoNumerico,
+        cuenta_id: Number(form.cuenta_id),
+        categoria_id: Number(form.categoria_id),
+        estado: form.estado,
+        tipo_egreso:
+          form.tipo_movimiento === "Egreso"
+            ? form.tipo_egreso
+            : null
+      })
+
+      onSuccess()
+      onClose()
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
     <Modal open={!!flujo} onClose={onClose} title="Editar movimiento">
       <input
+        type="date"
         className="input"
+        value={form.fecha}
+        onChange={e =>
+          setForm({ ...form, fecha: e.target.value })
+        }
+      />
+
+      <input
+        className="input"
+        placeholder="Descripción"
         value={form.descripcion}
         onChange={e =>
           setForm({ ...form, descripcion: e.target.value })
@@ -78,6 +117,7 @@ export default function EditFlujoModal({
         type="text"
         inputMode="decimal"
         className="input"
+        placeholder="Monto"
         value={form.monto}
         onChange={e =>
           setForm({
@@ -108,6 +148,7 @@ export default function EditFlujoModal({
           setForm({ ...form, categoria_id: e.target.value })
         }
       >
+        <option value="">Categoría</option>
         {categorias
           .filter(c => c.tipo_movimiento === form.tipo_movimiento)
           .map(c => (
@@ -117,8 +158,37 @@ export default function EditFlujoModal({
           ))}
       </select>
 
-      <button onClick={submit} className="btn-primary w-full">
-        Guardar cambios
+      {form.tipo_movimiento === "Egreso" && (
+        <select
+          className="input"
+          value={form.tipo_egreso}
+          onChange={e =>
+            setForm({ ...form, tipo_egreso: e.target.value })
+          }
+        >
+          <option value="">Tipo de egreso</option>
+          <option value="Fijo">Fijo</option>
+          <option value="Variable">Variable</option>
+        </select>
+      )}
+
+      <select
+        className="input"
+        value={form.estado}
+        onChange={e =>
+          setForm({ ...form, estado: e.target.value })
+        }
+      >
+        <option value="Confirmado">Confirmado</option>
+        <option value="Pendiente">Pendiente</option>
+      </select>
+
+      <button
+        onClick={submit}
+        disabled={loading}
+        className="btn-primary w-full"
+      >
+        {loading ? "Guardando..." : "Guardar cambios"}
       </button>
     </Modal>
   )

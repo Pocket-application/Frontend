@@ -8,6 +8,7 @@ const todayISO = () => new Date().toISOString().split("T")[0]
 
 function parseDecimalInput(value) {
   if (!value) return NaN
+
   value = value.replace(/\s/g, "")
 
   const hasComma = value.includes(",")
@@ -69,13 +70,20 @@ export default function CreateMovimientoModal({ open, onClose, onSuccess }) {
       return
     }
 
+    if (tipo === "Egreso" && !form.categoria_id) {
+      alert("Debe seleccionar una categoría")
+      return
+    }
+
     await createFlujo({
-      ...form,
+      fecha: form.fecha,
+      descripcion: form.descripcion,
       monto: montoNumerico,
       cuenta_id: Number(form.cuenta_id),
       categoria_id: Number(form.categoria_id),
       tipo_movimiento: tipo,
-      tipo_egreso: tipo === "Egreso" ? form.tipo_egreso : null
+      tipo_egreso: tipo === "Egreso" ? form.tipo_egreso : null,
+      estado: form.estado
     })
 
     onSuccess?.()
@@ -86,10 +94,23 @@ export default function CreateMovimientoModal({ open, onClose, onSuccess }) {
     <Modal open={open} onClose={onClose} title="Crear movimiento">
       {step === 1 && (
         <>
-          <button onClick={() => { setTipo("Ingreso"); setStep(2) }} className="btn-primary w-full mb-2">
+          <button
+            className="btn-primary w-full mb-2"
+            onClick={() => {
+              setTipo("Ingreso")
+              setStep(2)
+            }}
+          >
             Ingreso
           </button>
-          <button onClick={() => { setTipo("Egreso"); setStep(2) }} className="w-full bg-red-600 text-white py-2 rounded-md">
+
+          <button
+            className="w-full py-2 rounded-md bg-red-600 text-white"
+            onClick={() => {
+              setTipo("Egreso")
+              setStep(2)
+            }}
+          >
             Egreso
           </button>
         </>
@@ -97,12 +118,23 @@ export default function CreateMovimientoModal({ open, onClose, onSuccess }) {
 
       {step === 2 && (
         <>
-          <input type="date" className="input" value={form.fecha}
-            onChange={e => setForm({ ...form, fecha: e.target.value })} />
+          <input
+            type="date"
+            className="input"
+            value={form.fecha}
+            onChange={e =>
+              setForm({ ...form, fecha: e.target.value })
+            }
+          />
 
-          <input className="input" placeholder="Descripción"
+          <input
+            className="input"
+            placeholder="Descripción"
             value={form.descripcion}
-            onChange={e => setForm({ ...form, descripcion: e.target.value })} />
+            onChange={e =>
+              setForm({ ...form, descripcion: e.target.value })
+            }
+          />
 
           <input
             type="text"
@@ -111,11 +143,58 @@ export default function CreateMovimientoModal({ open, onClose, onSuccess }) {
             placeholder="Monto"
             value={form.monto}
             onChange={e =>
-              setForm({ ...form, monto: e.target.value.replace(/[^0-9.,\s]/g, "") })
+              setForm({
+                ...form,
+                monto: e.target.value.replace(/[^0-9.,\s]/g, "")
+              })
             }
           />
 
-          {/* selects iguales a los tuyos */}
+          <select
+            className="input"
+            value={form.cuenta_id}
+            onChange={e =>
+              setForm({ ...form, cuenta_id: e.target.value })
+            }
+          >
+            <option value="">Cuenta</option>
+            {cuentas.map(c => (
+              <option key={c.id} value={c.id}>
+                {c.nombre}
+              </option>
+            ))}
+          </select>
+
+          <select
+            className="input"
+            value={form.categoria_id}
+            onChange={e =>
+              setForm({ ...form, categoria_id: e.target.value })
+            }
+          >
+            <option value="">Categoría</option>
+            {categorias
+              .filter(c => c.tipo_movimiento === tipo)
+              .map(c => (
+                <option key={c.id} value={c.id}>
+                  {c.nombre}
+                </option>
+              ))}
+          </select>
+
+          {tipo === "Egreso" && (
+            <select
+              className="input"
+              value={form.tipo_egreso}
+              onChange={e =>
+                setForm({ ...form, tipo_egreso: e.target.value })
+              }
+            >
+              <option value="">Tipo de egreso</option>
+              <option value="Fijo">Fijo</option>
+              <option value="Variable">Variable</option>
+            </select>
+          )}
 
           <button onClick={submit} className="btn-primary w-full">
             Crear movimiento

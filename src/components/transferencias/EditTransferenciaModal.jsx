@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react"
 import { updateTransferencia } from "../../api/transferencias.api"
 
+/* =========================
+   DECIMAL PARSER
+========================= */
 function parseDecimalInput(value) {
   if (!value) return NaN
+
   value = value.replace(/\s/g, "")
 
   const hasComma = value.includes(",")
@@ -28,6 +32,7 @@ export default function EditTransferenciaModal({
   onSuccess
 }) {
   const [form, setForm] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (transferencia) {
@@ -46,18 +51,27 @@ export default function EditTransferenciaModal({
     e.preventDefault()
 
     const montoNumerico = parseDecimalInput(form.monto)
+
     if (!Number.isFinite(montoNumerico)) {
       alert("Monto inválido")
       return
     }
 
-    await updateTransferencia(transferencia.id, {
-      ...form,
-      monto: montoNumerico
-    })
+    try {
+      setLoading(true)
 
-    onClose()
-    onSuccess()
+      await updateTransferencia(transferencia.id, {
+        cuenta_origen_id: Number(form.cuenta_origen_id),
+        cuenta_destino_id: Number(form.cuenta_destino_id),
+        monto: montoNumerico,
+        descripcion: form.descripcion
+      })
+
+      onSuccess()
+      onClose()
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -66,14 +80,16 @@ export default function EditTransferenciaModal({
         onSubmit={handleSubmit}
         className="bg-slate-900 rounded-2xl p-6 w-96 space-y-4"
       >
-        <h2 className="text-xl font-semibold">Editar transferencia</h2>
+        <h2 className="text-xl font-semibold">
+          Editar transferencia
+        </h2>
 
         <select
+          className="input w-full"
           value={form.cuenta_origen_id}
           onChange={e =>
-            setForm({ ...form, cuenta_origen_id: Number(e.target.value) })
+            setForm({ ...form, cuenta_origen_id: e.target.value })
           }
-          className="input w-full"
         >
           {cuentas.map(c => (
             <option key={c.id} value={c.id}>
@@ -83,11 +99,11 @@ export default function EditTransferenciaModal({
         </select>
 
         <select
+          className="input w-full"
           value={form.cuenta_destino_id}
           onChange={e =>
-            setForm({ ...form, cuenta_destino_id: Number(e.target.value) })
+            setForm({ ...form, cuenta_destino_id: e.target.value })
           }
-          className="input w-full"
         >
           {cuentas.map(c => (
             <option key={c.id} value={c.id}>
@@ -99,6 +115,8 @@ export default function EditTransferenciaModal({
         <input
           type="text"
           inputMode="decimal"
+          className="input w-full"
+          placeholder="Monto"
           value={form.monto}
           onChange={e =>
             setForm({
@@ -106,23 +124,32 @@ export default function EditTransferenciaModal({
               monto: e.target.value.replace(/[^0-9.,\s]/g, "")
             })
           }
-          className="input w-full"
         />
 
         <input
+          className="input w-full"
+          placeholder="Descripción"
           value={form.descripcion}
           onChange={e =>
             setForm({ ...form, descripcion: e.target.value })
           }
-          className="input w-full"
         />
 
         <div className="flex justify-end gap-3">
-          <button type="button" onClick={onClose} className="btn-secondary">
+          <button
+            type="button"
+            onClick={onClose}
+            className="btn-secondary"
+            disabled={loading}
+          >
             Cancelar
           </button>
-          <button type="submit" className="btn-primary">
-            Guardar
+          <button
+            type="submit"
+            className="btn-primary"
+            disabled={loading}
+          >
+            {loading ? "Guardando..." : "Guardar"}
           </button>
         </div>
       </form>
