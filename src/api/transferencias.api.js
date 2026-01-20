@@ -1,26 +1,42 @@
+// src/api/transferencias.api.js
 import api from "./axios"
 
-export async function getTransferencias(params = {}) {
+/**
+ * GET /transferencias/
+ */
+export const getTransferencias = async (params = {}) => {
   const { data } = await api.get("/transferencias/", { params })
   return data
 }
 
-export async function getTransferencia(id) {
+/**
+ * GET /transferencias/{id}/
+ */
+export const getTransferencia = async (id) => {
   const { data } = await api.get(`/transferencias/${id}/`)
   return data
 }
 
-export async function createTransferencia(data) {
-  const { data: response } = await api.post("/transferencias/", data)
-  return response
+/**
+ * POST /transferencias/
+ */
+export const createTransferencia = async (payload) => {
+  const { data } = await api.post("/transferencias/", payload)
+  return data
 }
 
-export async function updateTransferencia(id, data) {
-    const { data: response } = await api.put(`/transferencias/${id}/`, data)
-    return response
+/**
+ * PUT /transferencias/{id}/
+ */
+export const updateTransferencia = async (id, payload) => {
+  const { data } = await api.put(`/transferencias/${id}/`, payload)
+  return data
 }
 
-export async function deleteTransferencia(id) {
-    const { data: response } = await api.delete(`/transferencias/${id}/`)
-    return response
+/**
+ * DELETE /transferencias/{id}/
+ */
+export const deleteTransferencia = async (id) => {
+  const { data } = await api.delete(`/transferencias/${id}/`)
+  return data
 }

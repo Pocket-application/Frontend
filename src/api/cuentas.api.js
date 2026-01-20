@@ -1,20 +1,34 @@
+// src/api/cuentas.api.js
 import api from "./axios"
 
-export async function getCuentas() {
+/**
+ * GET /cuentas/
+ */
+export const getCuentas = async () => {
   const { data } = await api.get("/cuentas/")
   return data
 }
-export async function createCuenta(data) {
-  const { data: response } = await api.post("/cuentas/", data)
-  return response
+
+/**
+ * POST /cuentas/
+ */
+export const createCuenta = async (payload) => {
+  const { data } = await api.post("/cuentas/", payload)
+  return data
 }
 
-export async function updateCuenta(id, data) {
-  const { data: response } = await api.put(`/cuentas/${id}/`, data)
-  return response
+/**
+ * PUT /cuentas/{id}/
+ */
+export const updateCuenta = async (id, payload) => {
+  const { data } = await api.put(`/cuentas/${id}/`, payload)
+  return data
 }
 
-export async function deleteCuenta(id) {
-  const { data: response } = await api.delete(`/cuentas/${id}/`)
-  return response
+/**
+ * DELETE /cuentas/{id}/
+ */
+export const deleteCuenta = async (id) => {
+  const { data } = await api.delete(`/cuentas/${id}/`)
+  return data
 }

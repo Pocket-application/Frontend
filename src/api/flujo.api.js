@@ -1,21 +1,34 @@
+// src/api/flujo.api.js
 import api from "./axios"
 
-export async function getFlujos(params = {}) {
-  const { data } = await api.get('/flujo/', { params })
+/**
+ * GET /flujo/
+ */
+export const getFlujos = async (params = {}) => {
+  const { data } = await api.get("/flujo/", { params })
   return data
 }
 
-export async function createFlujo(data) {
-  const { data: response } = await api.post('/flujo/', data)
-  return response
+/**
+ * POST /flujo/
+ */
+export const createFlujo = async (payload) => {
+  const { data } = await api.post("/flujo/", payload)
+  return data
 }
 
-export async function updateFlujo(id, data) {
-  const { data: response } = await api.put(`/flujo/${id}/`, data)
-  return response
+/**
+ * PUT /flujo/{id}/
+ */
+export const updateFlujo = async (id, payload) => {
+  const { data } = await api.put(`/flujo/${id}/`, payload)
+  return data
 }
 
-export async function deleteFlujo(id) {
-  const { data: response } = await api.delete(`/flujo/${id}/`)
-  return response
+/**
+ * DELETE /flujo/{id}/
+ */
+export const deleteFlujo = async (id) => {
+  const { data } = await api.delete(`/flujo/${id}/`)
+  return data
 }
