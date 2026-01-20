@@ -2,6 +2,29 @@ import { useEffect, useState } from "react"
 import Modal from "../ui/Modal"
 import { updateFlujo } from "../../api/flujo.api"
 
+/* =========================
+   DECIMAL PARSER
+========================= */
+function parseDecimalInput(value) {
+  if (!value) return NaN
+  value = value.replace(/\s/g, "")
+
+  const hasComma = value.includes(",")
+  const hasDot = value.includes(".")
+
+  if (hasComma && hasDot) {
+    if (value.lastIndexOf(",") > value.lastIndexOf(".")) {
+      value = value.replace(/\./g, "").replace(",", ".")
+    } else {
+      value = value.replace(/,/g, "")
+    }
+  } else if (hasComma) {
+    value = value.replace(",", ".")
+  }
+
+  return Number(value)
+}
+
 export default function EditFlujoModal({
   flujo,
   cuentas,
@@ -12,15 +35,27 @@ export default function EditFlujoModal({
   const [form, setForm] = useState(null)
 
   useEffect(() => {
-    if (flujo) setForm(flujo)
+    if (flujo) {
+      setForm({
+        ...flujo,
+        monto: String(flujo.monto)
+      })
+    }
   }, [flujo])
 
   if (!form) return null
 
   const submit = async () => {
+    const montoNumerico = parseDecimalInput(form.monto)
+
+    if (!Number.isFinite(montoNumerico)) {
+      alert("Monto inválido")
+      return
+    }
+
     await updateFlujo(form.id, {
       descripcion: form.descripcion,
-      monto: Number(form.monto),
+      monto: montoNumerico,
       cuenta_id: Number(form.cuenta_id),
       categoria_id: Number(form.categoria_id)
     })
@@ -40,11 +75,15 @@ export default function EditFlujoModal({
       />
 
       <input
-        type="number"
+        type="text"
+        inputMode="decimal"
         className="input"
         value={form.monto}
         onChange={e =>
-          setForm({ ...form, monto: e.target.value })
+          setForm({
+            ...form,
+            monto: e.target.value.replace(/[^0-9.,\s]/g, "")
+          })
         }
       />
 

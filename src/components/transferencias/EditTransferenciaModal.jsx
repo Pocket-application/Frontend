@@ -1,6 +1,26 @@
 import { useEffect, useState } from "react"
 import { updateTransferencia } from "../../api/transferencias.api"
 
+function parseDecimalInput(value) {
+  if (!value) return NaN
+  value = value.replace(/\s/g, "")
+
+  const hasComma = value.includes(",")
+  const hasDot = value.includes(".")
+
+  if (hasComma && hasDot) {
+    if (value.lastIndexOf(",") > value.lastIndexOf(".")) {
+      value = value.replace(/\./g, "").replace(",", ".")
+    } else {
+      value = value.replace(/,/g, "")
+    }
+  } else if (hasComma) {
+    value = value.replace(",", ".")
+  }
+
+  return Number(value)
+}
+
 export default function EditTransferenciaModal({
   transferencia,
   cuentas = [],
@@ -14,7 +34,7 @@ export default function EditTransferenciaModal({
       setForm({
         cuenta_origen_id: transferencia.cuenta_origen_id,
         cuenta_destino_id: transferencia.cuenta_destino_id,
-        monto: transferencia.monto,
+        monto: String(transferencia.monto),
         descripcion: transferencia.descripcion
       })
     }
@@ -24,7 +44,18 @@ export default function EditTransferenciaModal({
 
   const handleSubmit = async e => {
     e.preventDefault()
-    await updateTransferencia(transferencia.id, form)
+
+    const montoNumerico = parseDecimalInput(form.monto)
+    if (!Number.isFinite(montoNumerico)) {
+      alert("Monto inválido")
+      return
+    }
+
+    await updateTransferencia(transferencia.id, {
+      ...form,
+      monto: montoNumerico
+    })
+
     onClose()
     onSuccess()
   }
@@ -66,9 +97,15 @@ export default function EditTransferenciaModal({
         </select>
 
         <input
-          type="number"
+          type="text"
+          inputMode="decimal"
           value={form.monto}
-          onChange={e => setForm({ ...form, monto: e.target.value })}
+          onChange={e =>
+            setForm({
+              ...form,
+              monto: e.target.value.replace(/[^0-9.,\s]/g, "")
+            })
+          }
           className="input w-full"
         />
 
