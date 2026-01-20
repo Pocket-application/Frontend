@@ -21,7 +21,7 @@ export const createCuenta = async (payload) => {
  * PUT /cuentas/{id}/
  */
 export const updateCuenta = async (id, payload) => {
-  const { data } = await api.put(`/cuentas/${id}/`, payload)
+  const { data } = await api.put(`/cuentas/${id}`, payload)
   return data
 }
 
@@ -29,6 +29,6 @@ export const updateCuenta = async (id, payload) => {
  * DELETE /cuentas/{id}/
  */
 export const deleteCuenta = async (id) => {
-  const { data } = await api.delete(`/cuentas/${id}/`)
+  const { data } = await api.delete(`/cuentas/${id}`)
   return data
 }

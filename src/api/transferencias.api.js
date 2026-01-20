@@ -29,7 +29,7 @@ export const createTransferencia = async (payload) => {
  * PUT /transferencias/{id}/
  */
 export const updateTransferencia = async (id, payload) => {
-  const { data } = await api.put(`/transferencias/${id}/`, payload)
+  const { data } = await api.put(`/transferencias/${id}`, payload)
   return data
 }
 
@@ -37,6 +37,6 @@ export const updateTransferencia = async (id, payload) => {
  * DELETE /transferencias/{id}/
  */
 export const deleteTransferencia = async (id) => {
-  const { data } = await api.delete(`/transferencias/${id}/`)
+  const { data } = await api.delete(`/transferencias/${id}`)
   return data
 }

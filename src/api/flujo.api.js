@@ -5,7 +5,7 @@ import api from "./axios"
  * GET flujo/
  */
 export const getFlujos = async (params = {}) => {
-  const { data } = await api.get("flujo/", { params })
+  const { data } = await api.get("/flujo/", { params })
   return data
 }
 
@@ -13,7 +13,7 @@ export const getFlujos = async (params = {}) => {
  * POST flujo/
  */
 export const createFlujo = async (payload) => {
-  const { data } = await api.post("flujo/", payload)
+  const { data } = await api.post("/flujo/", payload)
   return data
 }
 
@@ -21,7 +21,8 @@ export const createFlujo = async (payload) => {
  * PUT flujo/{id}/
  */
 export const updateFlujo = async (id, payload) => {
-  const { data } = await api.put(`flujo/${id}/`, payload)
+  const { data } = await api.put(`/flujo/${id}`, payload
+  )
   return data
 }
 
@@ -29,6 +30,6 @@ export const updateFlujo = async (id, payload) => {
  * DELETE flujo/{id}/
  */
 export const deleteFlujo = async (id) => {
-  const { data } = await api.delete(`flujo/${id}/`)
+  const { data } = await api.delete(`/flujo/${id}`)
   return data
 }

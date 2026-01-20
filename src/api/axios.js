@@ -8,7 +8,7 @@ import {
 } from '../services/token.service'
 import { refreshToken as refreshTokenApi } from './auth.api'
 
-const API_URL = import.meta.env.VITE_API_URL.replace(/\/$/, '')
+const API_URL = "https://www.oscarpalomino.dev/pocket/api/".replace(/\/$/, '')
 
 const api = axios.create({
   baseURL: API_URL,
@@ -20,16 +20,24 @@ const api = axios.create({
 /* ===============================
    REQUEST INTERCEPTOR
 ================================ */
-api.interceptors.request.use(
-  (config) => {
-    const token = getAccessToken()
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
-    }
-    return config
-  },
-  (error) => Promise.reject(error)
-)
+api.interceptors.request.use((config) => {
+  if (!config.url.startsWith('http') && !config.url.startsWith('/')) {
+    console.error(
+      '[AXIOS ERROR] URL RELATIVA DETECTADA:',
+      config.url
+    )
+    throw new Error(
+      'Axios URL debe comenzar con "/" o ser absoluta'
+    )
+  }
+
+  const token = getAccessToken()
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+
+  return config
+})
 
 /* ===============================
    RESPONSE INTERCEPTOR

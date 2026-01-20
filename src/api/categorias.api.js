@@ -21,7 +21,7 @@ export const createCategoria = async (payload) => {
  * PUT /categorias/{id}/
  */
 export const updateCategoria = async (id, payload) => {
-  const { data } = await api.put(`/categorias/${id}/`, payload)
+  const { data } = await api.put(`/categorias/${id}`, payload)
   return data
 }
 
@@ -29,6 +29,6 @@ export const updateCategoria = async (id, payload) => {
  * DELETE /categorias/{id}/
  */
 export const deleteCategoria = async (id) => {
-  const { data } = await api.delete(`/categorias/${id}/`)
+  const { data } = await api.delete(`/categorias/${id}`)
   return data
 }
