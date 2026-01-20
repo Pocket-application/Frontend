@@ -8,7 +8,30 @@ import {
 } from '../services/token.service'
 import { refreshToken as refreshTokenApi } from './auth.api'
 
-const API_URL = import.meta.env.VITE_API_URL
+const API_URL = import.meta.env.VITE_API_URL.replace(/\/$/, '')
+
+function normalizeApiUrl(config) {
+  if (!config.url) return config
+
+  // Si ya es absoluta y correcta → no tocar
+  if (config.url.startsWith(API_URL)) {
+    return config
+  }
+
+  // Si es absoluta pero NO es la API → warning
+  if (config.url.startsWith('http')) {
+    console.warn('[Axios] URL externa detectada:', config.url)
+    return config
+  }
+
+  // Reconstruir SIEMPRE con API_URL
+  const cleanPath = config.url.replace(/^\/+/, '')
+  config.url = `${API_URL}/${cleanPath}`
+
+  return config
+}
+
+
 
 const api = axios.create({
   baseURL: API_URL,
@@ -22,14 +45,18 @@ const api = axios.create({
 ================================ */
 api.interceptors.request.use(
   (config) => {
+    normalizeApiUrl(config)
+
     const token = getAccessToken()
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
+
     return config
   },
   (error) => Promise.reject(error)
 )
+
 
 /* ===============================
    RESPONSE INTERCEPTOR
