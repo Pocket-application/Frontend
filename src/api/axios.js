@@ -10,29 +10,6 @@ import { refreshToken as refreshTokenApi } from './auth.api'
 
 const API_URL = import.meta.env.VITE_API_URL.replace(/\/$/, '')
 
-function normalizeApiUrl(config) {
-  if (!config.url) return config
-
-  // Si ya es absoluta y correcta → no tocar
-  if (config.url.startsWith(API_URL)) {
-    return config
-  }
-
-  // Si es absoluta pero NO es la API → warning
-  if (config.url.startsWith('http')) {
-    console.warn('[Axios] URL externa detectada:', config.url)
-    return config
-  }
-
-  // Reconstruir SIEMPRE con API_URL
-  const cleanPath = config.url.replace(/^\/+/, '')
-  config.url = `${API_URL}/${cleanPath}`
-
-  return config
-}
-
-
-
 const api = axios.create({
   baseURL: API_URL,
   headers: {
@@ -45,18 +22,14 @@ const api = axios.create({
 ================================ */
 api.interceptors.request.use(
   (config) => {
-    normalizeApiUrl(config)
-
     const token = getAccessToken()
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
-
     return config
   },
   (error) => Promise.reject(error)
 )
-
 
 /* ===============================
    RESPONSE INTERCEPTOR
@@ -66,8 +39,7 @@ let failedQueue = []
 
 const processQueue = (error, token = null) => {
   failedQueue.forEach((prom) => {
-    if (error) prom.reject(error)
-    else prom.resolve(token)
+    error ? prom.reject(error) : prom.resolve(token)
   })
   failedQueue = []
 }
@@ -77,10 +49,7 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config
 
-    if (
-      error.response?.status === 401 &&
-      !originalRequest._retry
-    ) {
+    if (error.response?.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({
@@ -101,7 +70,6 @@ api.interceptors.response.use(
         if (!refresh_token) throw error
 
         const data = await refreshTokenApi(refresh_token)
-
         setTokens(data)
 
         api.defaults.headers.Authorization =
@@ -114,7 +82,7 @@ api.interceptors.response.use(
 
         return api(originalRequest)
       } catch (err) {
-        processQueue(err, null)
+        processQueue(err)
         logout()
         globalThis.location.href = '/'
         return Promise.reject(err)
