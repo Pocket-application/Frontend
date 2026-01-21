@@ -11,15 +11,24 @@ import CategoriasChart from "../components/reportes/CategoriasChart"
 import CuentasChart from "../components/reportes/CuentasChart"
 import EvolucionChart from "../components/reportes/EvolucionChart"
 import FiltersModal from "../components/reportes/FiltersModal"
+import MonthPickerModal from "../components/reportes/MonthPickerModal"
 
 export default function Reportes() {
   const [flujos, setFlujos] = useState([])
   const [categorias, setCategorias] = useState([])
   const [cuentas, setCuentas] = useState([])
 
+  const today = new Date()
+
   const [openFilters, setOpenFilters] = useState(false)
+  const [openMonth, setOpenMonth] = useState(false)
+
+  const [month, setMonth] = useState(today.getMonth())
+  const [year, setYear] = useState(today.getFullYear())
+
   const [startDate, setStartDate] = useState("")
   const [endDate, setEndDate] = useState("")
+
   const [tipo, setTipo] = useState("")
   const [categoriaId, setCategoriaId] = useState("")
   const [cuentaId, setCuentaId] = useState("")
@@ -34,6 +43,20 @@ export default function Reportes() {
     )
   }, [])
 
+  /* =========================
+     CUANDO CAMBIA MES/AÑO
+  ========================= */
+  useEffect(() => {
+    const start = new Date(year, month, 1)
+    const end = new Date(year, month + 1, 0)
+
+    setStartDate(start.toISOString().split("T")[0])
+    setEndDate(end.toISOString().split("T")[0])
+  }, [month, year])
+
+  /* =========================
+     FILTROS
+  ========================= */
   const filteredFlujos = useMemo(() => {
     return flujos.filter(f => {
       const date = new Date(f.fecha)
@@ -60,9 +83,30 @@ export default function Reportes() {
       <Navbar />
 
       <main className="max-w-7xl mx-auto px-6 py-10 space-y-10">
-        <ReportesHeader onFilters={() => setOpenFilters(true)} />
+        <ReportesHeader
+          month={month}
+          year={year}
+          onPrevMonth={() => {
+            if (month === 0) {
+              setMonth(11)
+              setYear(y => y - 1)
+            } else setMonth(m => m - 1)
+          }}
+          onNextMonth={() => {
+            if (month === 11) {
+              setMonth(0)
+              setYear(y => y + 1)
+            } else setMonth(m => m + 1)
+          }}
+          onOpenMonth={() => setOpenMonth(true)}
+          onFilters={() => setOpenFilters(true)}
+        />
 
-        <ResumenGeneral flujos={filteredFlujos} cuentas={cuentas} categorias={categorias} />
+        <ResumenGeneral
+          flujos={filteredFlujos}
+          cuentas={cuentas}
+          categorias={categorias}
+        />
 
         <CategoriasChart
           flujos={filteredFlujos}
@@ -74,6 +118,7 @@ export default function Reportes() {
         <EvolucionChart flujos={filteredFlujos} />
       </main>
 
+      {/* MODALES */}
       <FiltersModal
         open={openFilters}
         onClose={() => setOpenFilters(false)}
@@ -89,6 +134,15 @@ export default function Reportes() {
         cuentas={cuentas}
         cuentaId={cuentaId}
         setCuentaId={setCuentaId}
+      />
+
+      <MonthPickerModal
+        open={openMonth}
+        onClose={() => setOpenMonth(false)}
+        month={month}
+        year={year}
+        setMonth={setMonth}
+        setYear={setYear}
       />
     </div>
   )
