@@ -34,16 +34,23 @@ export default function Reportes() {
     )
   }, [])
 
-  // Filtrar movimientos según filtros
   const filteredFlujos = useMemo(() => {
     return flujos.filter(f => {
       const date = new Date(f.fecha)
+
       if (startDate && endDate) {
         if (date < new Date(startDate) || date > new Date(endDate)) return false
       }
+
       if (tipo && f.tipo_movimiento !== tipo) return false
       if (categoriaId && f.categoria_id !== Number(categoriaId)) return false
-      if (cuentaId && (f.cuenta_id !== Number(cuentaId) && f.cuenta_destino_id !== Number(cuentaId))) return false
+
+      if (
+        cuentaId &&
+        f.cuenta_id !== Number(cuentaId) &&
+        f.cuenta_destino_id !== Number(cuentaId)
+      ) return false
+
       return true
     })
   }, [flujos, startDate, endDate, tipo, categoriaId, cuentaId])
@@ -55,18 +62,16 @@ export default function Reportes() {
       <main className="max-w-7xl mx-auto px-6 py-10 space-y-10">
         <ReportesHeader onFilters={() => setOpenFilters(true)} />
 
-        {/* 1️⃣ Resumen General */}
-        <ResumenGeneral flujos={filteredFlujos} cuentas={cuentas} />
+        <ResumenGeneral flujos={filteredFlujos} cuentas={cuentas} categorias={categorias} />
 
-        {/* 2️⃣ Visualización por categorías */}
-        <CategoriasChart flujos={filteredFlujos} categorias={categorias} />
+        <CategoriasChart
+          flujos={filteredFlujos}
+          categorias={categorias}
+        />
 
-        {/* 3️⃣ Visualización por cuentas */}
         <CuentasChart flujos={filteredFlujos} cuentas={cuentas} />
 
-        {/* 4️⃣ Evolución en el tiempo */}
         <EvolucionChart flujos={filteredFlujos} />
-
       </main>
 
       <FiltersModal

@@ -31,7 +31,7 @@ export default function Pagination({
           onClick={() => setPage(p => p - 1)}
           className="px-3 py-1 rounded bg-slate-800 disabled:opacity-40"
         >
-          ←
+          Anterior
         </button>
 
         <span className="text-sm text-slate-400">
@@ -43,7 +43,7 @@ export default function Pagination({
           onClick={() => setPage(p => p + 1)}
           className="px-3 py-1 rounded bg-slate-800 disabled:opacity-40"
         >
-          →
+          Siguiente
         </button>
       </div>
     </div>

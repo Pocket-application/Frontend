@@ -11,6 +11,14 @@ const COLORS = {
   }
 }
 
+/* =========================
+   CATEGORÍAS OCULTAS EN UI
+========================= */
+const HIDDEN_CATEGORIES = [
+  "Transferencias entre cuentas",
+  "Reajuste de saldo"
+]
+
 export default function CategoriasColumn({
   title,
   categorias = [],
@@ -20,6 +28,13 @@ export default function CategoriasColumn({
   onDelete
 }) {
   const styles = COLORS[color]
+
+  /* =========================
+     FILTRO DE VISUALIZACIÓN
+  ========================= */
+  const categoriasVisibles = categorias.filter(
+    c => !HIDDEN_CATEGORIES.includes(c.nombre)
+  )
 
   return (
     <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-4">
@@ -36,7 +51,7 @@ export default function CategoriasColumn({
         </button>
       </div>
 
-      {categorias.length === 0 ? (
+      {categoriasVisibles.length === 0 ? (
         <p className="text-slate-400 text-sm">
           No hay categorías registradas
         </p>
@@ -49,7 +64,7 @@ export default function CategoriasColumn({
             </tr>
           </thead>
           <tbody>
-            {categorias.map(cat => (
+            {categoriasVisibles.map(cat => (
               <tr
                 key={cat.id}
                 className="border-t border-slate-800 hover:bg-slate-800/40"
@@ -57,22 +72,22 @@ export default function CategoriasColumn({
                 <td className="py-2">{cat.nombre}</td>
 
                 <td className="py-2 text-right space-x-3">
-                    <button
-                        onClick={() => onEdit(cat)}
-                        className="text-slate-300 hover:text-white"
-                        title="Editar"
-                    >
-                        <Pencil size={16} />
-                    </button>
+                  <button
+                    onClick={() => onEdit(cat)}
+                    className="text-slate-300 hover:text-white"
+                    title="Editar"
+                  >
+                    <Pencil size={16} />
+                  </button>
 
-                    <button
-                        onClick={() => onDelete(cat.id)}
-                        className="text-red-400 hover:text-red-300"
-                        title="Eliminar"
-                    >
-                        <Trash2 size={16} />
-                    </button>
-                    </td>
+                  <button
+                    onClick={() => onDelete(cat.id)}
+                    className="text-red-400 hover:text-red-300"
+                    title="Eliminar"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
