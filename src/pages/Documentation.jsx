@@ -101,7 +101,7 @@ export default function Documentation() {
 
           {/* Android APK */}
           <a
-            href="/pocket-app.apk"
+            href="https://s3.us-east-1.amazonaws.com/oscarpalomino.dev/pocket.apk"
             download
             className="rounded-xl border border-emerald-400 px-8 py-4 font-semibold text-emerald-400 hover:bg-emerald-400 hover:text-slate-950 transition"
           >
